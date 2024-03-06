@@ -18,10 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  useOrganization,
-  useUser,
-} from "@clerk/nextjs";
+import { useOrganization, useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { z } from "zod";
@@ -30,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { Doc } from "../../convex/_generated/dataModel";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -57,19 +55,27 @@ export function UploadButton() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!orgId) return;
     const postUrl = await generateUploadUrl();
+    const fileType = values.file[0].type
 
     const result = await fetch(postUrl, {
       method: "POST",
-      headers: { "Content-Type": values.file[0].type },
+      headers: { "Content-Type": fileType },
       body: values.file[0],
     });
     const { storageId } = await result.json();
+
+    const types = {
+      "image/png": "image",
+      "application/pdf": "pdf",
+      "text/csv": "csv",
+    } as Record<string, Doc<"files">["type"]>;
 
     try {
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
+        type: types[fileType]
       });
 
       form.reset();
@@ -97,65 +103,66 @@ export function UploadButton() {
   const createFile = useMutation(api.files.createFile);
 
   return (
-        <Dialog
-          open={isDialogOpen}
-          onOpenChange={(isOpen) => {
-            setIsDialogOpen(isOpen);
-            form.reset();
-          }}
-        >
-          <DialogTrigger asChild>
-            <Button>Upload file</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="mb-8">Upload your file</DialogTitle>
-              <DialogDescription>
-                This file will be accessible by anyone in your organization
-              </DialogDescription>
-            </DialogHeader>
-            <div>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8"
-                >
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Title</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your file title" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="file"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>File</FormLabel>
-                        <FormControl>
-                          <Input type="file" {...fileRef} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" disabled={form.formState.isSubmitting} className="flex gap-1">
-                    Submit
-                    {form.formState.isSubmitting && (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    )}
-                  </Button>
-                </form>
-              </Form>
-            </div>
-          </DialogContent>
-        </Dialog>
+    <Dialog
+      open={isDialogOpen}
+      onOpenChange={(isOpen) => {
+        setIsDialogOpen(isOpen);
+        form.reset();
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button>Upload file</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="mb-8">Upload your file</DialogTitle>
+          <DialogDescription>
+            This file will be accessible by anyone in your organization
+          </DialogDescription>
+        </DialogHeader>
+        <div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your file title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="file"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>File</FormLabel>
+                    <FormControl>
+                      <Input type="file" {...fileRef} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="flex gap-1"
+              >
+                Submit
+                {form.formState.isSubmitting && (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                )}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

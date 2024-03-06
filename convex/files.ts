@@ -1,3 +1,4 @@
+import { fileTypes } from './schema';
 import { ConvexError, v } from "convex/values";
 import { getUser } from "./users";
 import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
@@ -29,6 +30,7 @@ export const createFile = mutation({
   args: {
     name: v.string(),
     fileId: v.id("_storage"),
+    type: fileTypes,
     orgId: v.string(),
   },
   async handler(ctx, args) {
@@ -51,6 +53,7 @@ export const createFile = mutation({
     await ctx.db.insert("files", {
       name: args.name,
       fileId: args.fileId,
+      type: args.type,
       orgId: args.orgId,
     });
   },
