@@ -22,6 +22,7 @@ import {
   ImageIcon,
   MoreVertical,
   TrashIcon,
+  StarIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -42,6 +43,7 @@ import Image from "next/image";
 
 function FileCardActions({ file }: { file: Doc<"files"> }) {
   const deleteFile = useMutation(api.files.deleteFile);
+  const toggleFavorite = useMutation(api.files.toggleFavorite);
   const { toast } = useToast();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -80,6 +82,17 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
           <MoreVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => {
+              toggleFavorite({
+                fileId: file._id,
+              });
+            }}
+            className="flex gap-1 items-center cursor-pointer"
+          >
+            <StarIcon className="w-4 h-4" /> Favorite
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex gap-1 text-red-600 items-cente cursor-pointer"
             onClick={() => setIsConfirmOpen(true)}
@@ -122,15 +135,21 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
             width="100"
             height="100"
             src={getFileUrl(file.fileId)}
+            className="w-full h-full"
+            style={{ objectFit: "contain" }}
           />
         )}
-        {file.type === 'csv' && <GanttChartIcon className="w-20 h-20" />}
-        {file.type === 'pdf' && <FileTextIcon className="w-20 h-20" />}
+        {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
+        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button onClick={() => {
-          window.open(getFileUrl(file.fileId), "_blank")
-        }}>Download</Button>
+        <Button
+          onClick={() => {
+            window.open(getFileUrl(file.fileId), "_blank");
+          }}
+        >
+          Download
+        </Button>
       </CardFooter>
     </Card>
   );
