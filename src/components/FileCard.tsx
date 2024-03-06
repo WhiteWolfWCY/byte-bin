@@ -94,8 +94,6 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
 }
 
 function getFileUrl(fileId: Id<"_storage">): string {
-  console.log(process.env.NEXT_PUBLIC_CONVEX_URL)
-  console.log(`${process.env.NEXT_PUBLIC_CONVEX_URL}/api/storage/${fileId}`)
   return `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/storage/${fileId}`;
 }
 
@@ -117,7 +115,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
           <FileCardActions file={file} />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-[200px] flex justify-center items-center">
         {file.type === "image" && (
           <Image
             alt={file.name}
@@ -126,9 +124,13 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
             src={getFileUrl(file.fileId)}
           />
         )}
+        {file.type === 'csv' && <GanttChartIcon className="w-20 h-20" />}
+        {file.type === 'pdf' && <FileTextIcon className="w-20 h-20" />}
       </CardContent>
-      <CardFooter>
-        <Button>Download</Button>
+      <CardFooter className="flex justify-center">
+        <Button onClick={() => {
+          window.open(getFileUrl(file.fileId), "_blank")
+        }}>Download</Button>
       </CardFooter>
     </Card>
   );
