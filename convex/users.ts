@@ -1,6 +1,11 @@
-import { roles } from './schema';
+import { roles } from "./schema";
 import { ConvexError, v } from "convex/values";
-import { internalMutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+import {
+  internalMutation,
+  MutationCtx,
+  query,
+  QueryCtx,
+} from "./_generated/server";
 
 export async function getUser(
   ctx: QueryCtx | MutationCtx,
@@ -27,7 +32,7 @@ export const createUser = internalMutation({
       tokenIdentifier: args.tokenIdentifier,
       orgIds: [],
       name: args.name,
-      image: args.image
+      image: args.image,
     });
   },
 });
@@ -35,17 +40,20 @@ export const createUser = internalMutation({
 export const updateUser = internalMutation({
   args: { tokenIdentifier: v.string(), name: v.string(), image: v.string() },
   async handler(ctx, args) {
-    const user = await ctx.db.query("users").withIndex('by_tokenIdentifier', 
-    q => q.eq('tokenIdentifier', args.tokenIdentifier)
-    ).first()
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) =>
+        q.eq("tokenIdentifier", args.tokenIdentifier)
+      )
+      .first();
 
-    if(!user) {
-      throw new ConvexError("No user with this token found")
+    if (!user) {
+      throw new ConvexError("No user with this token found");
     }
 
     await ctx.db.patch(user._id, {
       name: args.name,
-      image: args.image
+      image: args.image,
     });
   },
 });
@@ -83,13 +91,30 @@ export const updateRoleInOrgForUser = internalMutation({
 });
 
 export const getUserProfile = query({
-  args: {userId: v.id("users")},
-  async handler (ctx, args){
-    const user = await ctx.db.get(args.userId)
+  args: { userId: v.id("users") },
+  async handler(ctx, args) {
+    const user = await ctx.db.get(args.userId);
 
     return {
       name: user?.name,
-      image: user?.image
+      image: user?.image,
+    };
+  },
+});
+
+export const getMe = query({
+  args: {},
+  async handler(ctx) {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("you must be logged in!");
     }
-  }
-})
+    const user = await getUser(ctx, identity.tokenIdentifier);
+
+    if(!user){
+      return null;
+    }
+
+    return user
+  },
+});

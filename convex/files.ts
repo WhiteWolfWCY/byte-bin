@@ -75,6 +75,7 @@ export const getFiles = query({
     query: v.optional(v.string()),
     favorites: v.optional(v.boolean()),
     deletedOnly: v.optional(v.boolean()),
+    type: v.optional(fileTypes)
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -115,6 +116,10 @@ export const getFiles = query({
       files = files.filter((file) => !file.markForDeletion);
     }
 
+    if(args.type){
+      files = files.filter(file => file.type === args.type)
+    }
+
     return files;
   },
 });
@@ -145,11 +150,11 @@ export const deleteFile = mutation({
       throw new ConvexError("no access to file");
     }
 
-    const isAdmin =
+    const canDelete = access.file.userId === access.user._id ||
       access.user.orgIds.find((org) => org.orgId === access.file.orgId)
         ?.role === "admin";
 
-    if (!isAdmin) {
+    if (!canDelete) {
       throw new ConvexError("You do not have access to delete this file");
     }
 
@@ -168,12 +173,12 @@ export const restoreFile = mutation({
       throw new ConvexError("no access to file");
     }
 
-    const isAdmin =
-      access.user.orgIds.find((org) => org.orgId === access.file.orgId)
-        ?.role === "admin";
+    const canRestore = access.file.userId === access.user._id ||
+    access.user.orgIds.find((org) => org.orgId === access.file.orgId)
+      ?.role === "admin";
 
-    if (!isAdmin) {
-      throw new ConvexError("You do not have access to delete this file");
+    if (!canRestore) {
+      throw new ConvexError("You do not have access to restore this file");
     }
 
     await ctx.db.patch(args.fileId, {

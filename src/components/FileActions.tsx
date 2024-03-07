@@ -26,7 +26,7 @@
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";
   import { useState } from "react";
-  import { useMutation } from "convex/react";
+  import { useMutation, useQuery } from "convex/react";
   import { api } from "../../convex/_generated/api";
   import { useToast } from "./ui/use-toast";
   import { Protect } from "@clerk/nextjs";
@@ -47,6 +47,7 @@
     const toggleFavorite = useMutation(api.files.toggleFavorite);
     const { toast } = useToast();
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const me = useQuery(api.users.getMe)
   
     return (
       <>
@@ -112,7 +113,11 @@
               )}
             </DropdownMenuItem>
   
-            <Protect role="org:admin" fallback={<></>}>
+            <Protect condition={(check) => {
+                return check({
+                    role: "org:admin"
+                }) || file.userId === me?._id
+            }} fallback={<></>}>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="flex gap-1 items-cente cursor-pointer"
