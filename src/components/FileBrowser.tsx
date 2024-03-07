@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
@@ -9,7 +9,6 @@ import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { SearchBar } from "../components/SearchBar";
 import { useState } from "react";
-
 
 function Placeholder() {
   return (
@@ -28,10 +27,10 @@ function Placeholder() {
 
 export function FileBrowser({
   title,
-  favorites,
+  favouritesOnly,
 }: {
   title: string;
-  favorites?: boolean;
+  favouritesOnly?: boolean;
 }) {
   const organization = useOrganization();
   const user = useUser();
@@ -42,9 +41,11 @@ export function FileBrowser({
     orgId = organization.organization?.id ?? user.user?.id;
   }
 
+  const favourites = useQuery(api.files.getAllFavourites, orgId ? { orgId } : "skip")
+
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites } : "skip"
+    orgId ? { orgId, query, favorites: favouritesOnly } : "skip"
   );
   const isLoading = files === undefined;
 
@@ -71,7 +72,7 @@ export function FileBrowser({
 
           <div className="grid grid-cols-3 gap-4">
             {files?.map((file) => {
-              return <FileCard key={file._id} file={file} />;
+              return <FileCard favourites={favourites ?? []} key={file._id} file={file} />;
             })}
           </div>
         </>
