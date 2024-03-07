@@ -46,13 +46,15 @@ export const updateRoleInOrgForUser = internalMutation({
   async handler(ctx, args) {
     const user = await getUser(ctx, args.tokenIdentifier);
 
-    const org = user.orgIds.find(org => org.orgId === args.orgId)
+    const org = user.orgIds.find((org) => org.orgId === args.orgId);
 
-    if(!org) {
-      throw new ConvexError("Expected an organization for a user, but didnt find while updating")
+    if (!org) {
+      throw new ConvexError(
+        "expected an org on the user but was not found when updating"
+      );
     }
 
-    org.role = args.role
+    org.role = args.role;
 
     await ctx.db.patch(user._id, {
       orgIds: user.orgIds,

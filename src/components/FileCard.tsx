@@ -24,6 +24,7 @@ import {
   TrashIcon,
   StarIcon,
   StarHalf,
+  UndoIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -51,6 +52,7 @@ function FileCardActions({
   isFavourited: boolean;
 }) {
   const deleteFile = useMutation(api.files.deleteFile);
+  const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
   const { toast } = useToast();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -62,8 +64,8 @@ function FileCardActions({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action will mark the file for deletion. Files are being
+              deleted periodically.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -73,9 +75,9 @@ function FileCardActions({
                 await deleteFile({ fileId: file._id });
                 toast({
                   variant: "default",
-                  title: "File Deleted",
+                  title: "File marked for deletion",
                   description:
-                    "Your file has been permanently deleted from the system!",
+                    "Your file has been moved to trash, and will be deleted with the next scheduled deletion!",
                 });
               }}
             >
@@ -108,20 +110,32 @@ function FileCardActions({
               </div>
             )}
           </DropdownMenuItem>
-          
-          <Protect
-            role="org.admin"
-            fallback={
-              <></>
-            }
-          >
+
+          <Protect role="org:admin" fallback={<></>}>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="flex gap-1 text-red-600 items-cente cursor-pointer"
-              onClick={() => setIsConfirmOpen(true)}
+              className="flex gap-1 items-cente cursor-pointer"
+              onClick={() => {
+                if (file.markForDeletion) {
+                  restoreFile({
+                    fileId: file._id
+                  })
+                } else {
+                  setIsConfirmOpen(true);
+                }
+              }}
             >
-              <TrashIcon className="w-4 h-4" />
-              Delete
+              {file.markForDeletion ? (
+                <div className="flex gap-1 text-green-600 items-cente cursor-pointer">
+                  <UndoIcon className="w-4 h-4" />
+                  Restore
+                </div>
+              ) : (
+                <div className="flex gap-1 text-red-600 items-cente cursor-pointer">
+                  <TrashIcon className="w-4 h-4" />
+                  Delete
+                </div>
+              )}
             </DropdownMenuItem>
           </Protect>
         </DropdownMenuContent>
