@@ -76,9 +76,7 @@ export default function Home() {
               {files.length === 0 && <Placeholder />}
 
               <div className="grid grid-cols-3 gap-4">
-                {files?.map((file) => {
-                  return <FileCard key={file._id} file={file} />;
-                })}
+                
               </div>
             </>
           )}
