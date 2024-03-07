@@ -1,13 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { OrganizationSwitcher, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Image from "next/image";
+import Link from "next/link";
 
 export function Header () {
     return <div className="border-b py-4 bg-gray-50">
-        <div className="container mx-auto justify-between flex items-center">
-            <div>
+        <div className="container mx-auto justify-between flex flex-row items-center">
+                <Link href='/' className="flex gap-2 items-center text-xl text-black">
+                <Image src='/logo_white.png' width='80' height='80' alt='ByteBin logo' className="w-16 h-16" />
                 ByteBin
-            </div>
-            <div className="flex gap-8">
+                </Link>
+            
+            <Button variant={'outline'}>
+                <Link href='/dashboard/files'>Dashboard</Link>
+            </Button>
+            
+            <div className="flex gap-2">
                 <OrganizationSwitcher />
                 <UserButton />
                 <SignedOut>

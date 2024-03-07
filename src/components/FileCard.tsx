@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/button";
+import { formatRelative, subDays } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,7 @@ import {
   StarIcon,
   StarHalf,
   UndoIcon,
+  DownloadIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -38,11 +40,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ReactNode, useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useToast } from "./ui/use-toast";
 import Image from "next/image";
 import { Protect } from "@clerk/nextjs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function FileCardActions({
   file,
@@ -94,6 +97,16 @@ function FileCardActions({
         <DropdownMenuContent>
           <DropdownMenuItem
             onClick={() => {
+              window.open(getFileUrl(file.fileId), "_blank");
+            }}
+            className="flex gap-1 items-center cursor-pointer"
+          >
+            <DownloadIcon className="w-4 h-4" />
+            Download
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
               toggleFavorite({
                 fileId: file._id,
               });
@@ -102,7 +115,7 @@ function FileCardActions({
           >
             {!isFavourited ? (
               <div className="flex gap-1 justify-center items-center text-yellow-300">
-                <StarIcon className="w-4 h-4" /> <p>Favorite</p>
+                <StarIcon className="w-4 h-4" /> <p>Favourite</p>
               </div>
             ) : (
               <div className="flex gap-1 justify-center items-center text-grey-300">
@@ -118,8 +131,8 @@ function FileCardActions({
               onClick={() => {
                 if (file.markForDeletion) {
                   restoreFile({
-                    fileId: file._id
-                  })
+                    fileId: file._id,
+                  });
                 } else {
                   setIsConfirmOpen(true);
                 }
@@ -155,6 +168,10 @@ export function FileCard({
   file: Doc<"files">;
   favourites: Doc<"favorites">[];
 }) {
+  const userProfile = useQuery(api.users.getUserProfile, {
+    userId: file.userId,
+  });
+
   const typeIcons = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,
@@ -168,9 +185,9 @@ export function FileCard({
   return (
     <Card>
       <CardHeader className="relative">
-        <CardTitle className="flex gap-2">
+        <CardTitle className="flex gap-2 text-base font-normal">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
-          {file.name}
+          {file.name.length > 15 ? file.name.substring(0, 15) : file.name}
         </CardTitle>
         <div className="absolute top-2 right-3">
           <FileCardActions isFavourited={isFavourited} file={file} />
@@ -190,14 +207,18 @@ export function FileCard({
         {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
         {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
       </CardContent>
-      <CardFooter className="flex justify-center">
-        <Button
-          onClick={() => {
-            window.open(getFileUrl(file.fileId), "_blank");
-          }}
-        >
-          Download
-        </Button>
+      <CardFooter className="flex justify-between">
+        <div className="flex gap-2 text-xs text-muted-foreground items-center">
+          <Avatar className="h-6 w-6 text-[12px]">
+            <AvatarImage src={userProfile?.image} />
+            <AvatarFallback>{userProfile?.name?.charAt(0)}</AvatarFallback>
+          </Avatar>
+          {userProfile?.name}
+        </div>
+        <div className="text-xs text-muted-foreground">
+          Uploaded on:{" "}
+          {formatRelative(new Date(file._creationTime), new Date())}
+        </div>
       </CardFooter>
     </Card>
   );
