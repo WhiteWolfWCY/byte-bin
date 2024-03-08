@@ -24,14 +24,14 @@ export function SearchBar({ query, setQuery}: { query: string, setQuery: Dispatc
   }
 
   return (
-    <div>
+    <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center">
           <FormField
             control={form.control}
             name="query"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormControl>
                   <Input placeholder="File title" {...field} />
                 </FormControl>

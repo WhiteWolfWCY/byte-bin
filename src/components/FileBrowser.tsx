@@ -6,7 +6,7 @@ import { api } from "../../convex/_generated/api";
 import { UploadButton } from "../components/UploadButton";
 import { FileCard } from "../components/FileCard";
 import Image from "next/image";
-import { GridIcon, Loader2, RowsIcon, TableIcon } from "lucide-react";
+import { GridIcon, Loader2, RowsIcon, TableIcon, UploadIcon } from "lucide-react";
 import { SearchBar } from "../components/SearchBar";
 import { useState } from "react";
 import { DataTable } from "./FileTable";
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Doc } from "../../convex/_generated/dataModel";
 import { Label } from "./ui/label";
+import { Button } from "./ui/button";
 
 function Placeholder() {
   return (
@@ -85,12 +86,10 @@ export function FileBrowser({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">{title}</h1>
-
-        <SearchBar query={query} setQuery={setQuery} />
-
+      <div className="flex gap-2 flex-row items-center mb-8">
+        <h1 className="text-4xl font-bold text-nowrap">{title}</h1>
         <UploadButton />
+        <SearchBar query={query} setQuery={setQuery} />
       </div>
 
       <Tabs defaultValue="grid">
