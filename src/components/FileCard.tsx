@@ -7,22 +7,24 @@ import {
 } from "@/components/ui/card";
 import { Doc } from "../../convex/_generated/dataModel";
 import { formatRelative } from "date-fns";
-import {
-  FileTextIcon,
-  GanttChartIcon,
-  ImageIcon,
-} from "lucide-react";
+import { FileTextIcon, GanttChartIcon, ImageIcon } from "lucide-react";
 import { ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FileCardActions, getFileUrl } from "./FileActions";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function FileCard({
   file,
 }: {
-  file: Doc<"files"> & {isFavourited: boolean};
+  file: Doc<"files"> & { isFavourited: boolean };
 }) {
   const userProfile = useQuery(api.users.getUserProfile, {
     userId: file.userId,
@@ -39,7 +41,18 @@ export function FileCard({
       <CardHeader className="relative">
         <CardTitle className="flex gap-2 text-base font-normal">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
-          {file.name.length > 15 ? file.name.substring(0, 15) : file.name}
+          {file.name.length > 15 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>{file.name.substring(0, 15) + " ..."}</TooltipTrigger>
+                <TooltipContent>
+                  <p>{file.name}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            file.name
+          )}
         </CardTitle>
         <div className="absolute top-2 right-3">
           <FileCardActions isFavourited={file.isFavourited} file={file} />
