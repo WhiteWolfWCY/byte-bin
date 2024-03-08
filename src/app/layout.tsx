@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "../components/Header";
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +23,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ConvexClientProvider>
-          <Toaster />
-          <Header />
-          {children}
-          <Footer />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Toaster />
+            <Header />
+            {children}
+            <Footer />
+          </ThemeProvider>
         </ConvexClientProvider>
       </body>
     </html>

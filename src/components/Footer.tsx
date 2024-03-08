@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export function Footer() {
   return (
-    <div className="relative z-10 h-20 bg-gray-50 border-t mt-24 flex items-center">
+    <div className="relative z-10 h-20 bg-headerfooter border-t flex items-center">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <Image
@@ -14,7 +14,7 @@ export function Footer() {
             src="/logo_white.png"
             className="h-8 w-8"
           />
-          ByteBin &copy;
+          <p className="text-foreground">ByteBin &copy;</p>
         </div>
         <div>
         <Link href="/privacy">
