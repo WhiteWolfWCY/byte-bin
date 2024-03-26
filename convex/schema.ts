@@ -16,6 +16,7 @@ export default defineSchema({
     type: fileTypes,
     orgId: v.string(),
     markForDeletion: v.optional(v.boolean()),
+    url: v.string(),
   }).index("by_markForDeletion", ["markForDeletion"])
   .index("by_orgId", ["orgId"]),
   favorites: defineTable({

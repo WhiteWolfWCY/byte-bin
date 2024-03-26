@@ -64,7 +64,7 @@ export function FileCard({
             alt={file.name}
             width="100"
             height="100"
-            src={getFileUrl(file.fileId)}
+            src={file.url}
             className="w-full h-full"
             style={{ objectFit: "contain" }}
           />
