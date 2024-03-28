@@ -5,6 +5,9 @@ const nextConfig = {
       {
         hostname: "agile-iguana-270.convex.cloud",
       },
+      {
+        hostname: "giant-loris-861.convex.cloud",
+      },
     ],
   },
 };
