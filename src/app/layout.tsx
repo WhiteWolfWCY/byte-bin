@@ -18,12 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ConvexClientProvider>
           <ThemeProvider
             attribute="class"
-            enableSystem
+            defaultTheme="light"
             disableTransitionOnChange
           >
             <Toaster />
