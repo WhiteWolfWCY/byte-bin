@@ -24,7 +24,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/dashboard/files">
-                <Button className="text-foreground">Get started</Button>
+                <Button className="text-foreground bg-primary text-white">Get started</Button>
               </Link>
               <Link
                 href="/dashboard/files"

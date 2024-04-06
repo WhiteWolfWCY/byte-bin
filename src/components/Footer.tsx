@@ -16,7 +16,7 @@ export function Footer() {
           />
           <p className="text-foreground">ByteBin &copy;</p>
         </div>
-        <div>
+        <div className="hidden md:block">
         <Link href="/privacy">
           <Button variant={"link"}>Privacy Policy</Button>
         </Link>

@@ -6,7 +6,13 @@ import { api } from "../../convex/_generated/api";
 import { UploadButton } from "../components/UploadButton";
 import { FileCard } from "../components/FileCard";
 import Image from "next/image";
-import { GridIcon, Loader2, RowsIcon, TableIcon, UploadIcon } from "lucide-react";
+import {
+  GridIcon,
+  Loader2,
+  RowsIcon,
+  TableIcon,
+  UploadIcon,
+} from "lucide-react";
 import { SearchBar } from "../components/SearchBar";
 import { useState } from "react";
 import { DataTable } from "./FileTable";
@@ -32,8 +38,10 @@ function Placeholder() {
         height="300"
         src="/empty.svg"
       />
-      <div className="text-2xl">You have no files, upload one now</div>
-      <UploadButton />
+      <div className="text-2xl flex gap-4">
+        You have no files, upload one now
+        <UploadButton />
+      </div>
     </div>
   );
 }
@@ -112,7 +120,7 @@ export function FileBrowser({
                 setType(newType as any);
               }}
             >
-              <SelectTrigger id='type-select' className="w-[180px]">
+              <SelectTrigger id="type-select" className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -138,7 +146,9 @@ export function FileBrowser({
           </div>
         </TabsContent>
         <TabsContent value="table">
-          <DataTable columns={columns} data={modifiedFiles} />
+          {modifiedFiles.length !== 0 ? (
+            <DataTable columns={columns} data={modifiedFiles} />
+          ) : null}
         </TabsContent>
       </Tabs>
 
