@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export function Footer() {
   return (
-    <div className="relative z-10 h-20 bg-headerfooter border-t flex items-center">
+    <div className="relative hidden md:flex z-10 h-20 bg-headerfooter border-t items-center">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <Image
@@ -16,7 +16,7 @@ export function Footer() {
           />
           <p className="text-foreground">ByteBin &copy;</p>
         </div>
-        <div className="hidden md:block">
+        <div className="">
         <Link href="/privacy">
           <Button variant={"link"}>Privacy Policy</Button>
         </Link>

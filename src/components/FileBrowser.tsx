@@ -94,14 +94,16 @@ export function FileBrowser({
 
   return (
     <div>
-      <div className="flex gap-2 flex-row items-center mb-8">
-        <h1 className="text-4xl font-bold text-nowrap">{title}</h1>
-        <UploadButton />
+      <div className="flex flex-col md:flex-row gap-2 md:items-center mb-2 md:mb-8">
+        <div className="flex flex-row justify-between">
+          <h1 className="text-4xl font-bold text-nowrap">{title}</h1>
+          <UploadButton />
+        </div>
         <SearchBar query={query} setQuery={setQuery} />
       </div>
 
       <Tabs defaultValue="grid">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-row gap-2 justify-between items-center">
           <TabsList className="mb-2">
             <TabsTrigger className="flex gap-2 items-center" value="grid">
               <GridIcon className="w-6 h-6 mr-1" />
@@ -112,15 +114,15 @@ export function FileBrowser({
               <p className="text-lg">Table</p>
             </TabsTrigger>
           </TabsList>
-          <div className="flex gap-2 items-center">
-            <Label htmlFor="type-select">Type Filter</Label>
+          <div className="flex gap-2 items-center justify-center">
+            <Label className="hidden md:block" htmlFor="type-select">Type Filter</Label>
             <Select
               value={type}
               onValueChange={(newType) => {
                 setType(newType as any);
               }}
             >
-              <SelectTrigger id="type-select" className="w-[180px]">
+              <SelectTrigger id="type-select">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -139,7 +141,7 @@ export function FileBrowser({
           </div>
         )}
         <TabsContent value="grid">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {modifiedFiles?.map((file) => {
               return <FileCard key={file._id} file={file} />;
             })}
