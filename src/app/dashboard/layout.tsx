@@ -8,7 +8,7 @@ export default function DashboardLayout({
   return (
     <main className="container mx-auto pt-12">
       <div className="flex gap-8">
-        <SideNav />
+        <SideNav inSideMenu={false}/>
 
         <div className="w-full">{children}</div>
       </div>

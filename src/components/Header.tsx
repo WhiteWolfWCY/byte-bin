@@ -89,7 +89,7 @@ export function Header() {
             </Button>
           </div>
 
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center justify-center gap-2">
             <div className="flex items-center justify-center">
               <OrganizationSwitcher
                 appearance={{

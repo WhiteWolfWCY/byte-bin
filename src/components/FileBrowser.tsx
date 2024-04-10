@@ -38,7 +38,7 @@ function Placeholder() {
         height="300"
         src="/empty.svg"
       />
-      <div className="text-2xl flex gap-4">
+      <div className="text-2xl flex gap-4 items-center text-center">
         You have no files, upload one now
         <UploadButton />
       </div>
@@ -95,7 +95,7 @@ export function FileBrowser({
   return (
     <div>
       <div className="flex flex-col md:flex-row gap-2 md:items-center mb-2 md:mb-8">
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-between items-center">
           <h1 className="text-4xl font-bold text-nowrap">{title}</h1>
           <UploadButton />
         </div>

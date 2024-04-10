@@ -72,7 +72,7 @@ export function FileCard({
         {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
         {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between p-2">
         <div className="flex gap-2 text-xs text-muted-foreground items-center">
           <Avatar className="h-6 w-6 text-[12px]">
             <AvatarImage src={userProfile?.image} />

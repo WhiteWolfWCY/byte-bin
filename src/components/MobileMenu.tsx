@@ -1,3 +1,4 @@
+"use client"
 import {
   OrganizationSwitcher,
   SignedOut,
@@ -7,6 +8,7 @@ import {
 import { dark } from "@clerk/themes";
 import { X } from "lucide-react";
 import { Button } from "./ui/button";
+import { SideNav } from "./SideNav";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -30,7 +32,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
           <X className={`transform transition-transform duration-1000 ${!isOpen ? "rotate-0" : "rotate-[360deg]"}`} />
         </Button>
       </div>
-      <div className="flex h-full">{/* Menu content */}</div>
+      <div className="flex h-full justify-center">
+        <SideNav inSideMenu onClose={onClose}/>  
       {/* Stopka menu */}
       <div className="absolute bottom-0 left-0 h-20 w-full bg-accent py-4 shadow-top">
         <div className="flex gap-8 items-center justify-center">
@@ -52,6 +55,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             </SignInButton>
           </SignedOut>
         </div>
+      </div>
       </div>
     </div>
   );
