@@ -28,7 +28,7 @@ export default function RootLayout({
           >
             <Toaster />
             <Header />
-            {children}
+              {children}
             <Footer />
           </ThemeProvider>
         </ConvexClientProvider>

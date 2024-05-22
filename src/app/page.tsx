@@ -5,8 +5,8 @@ import { useState } from "react";
 
 export default function LandingPage() {
   return (
-    <div className="bg-headerfooter pb-24">
-      <div className="relative isolate px-6 lg:px-8">
+    <div className="bg-headerfooter relative mt-48">
+      <div className="isolate px-6 lg:px-8">
         <div className="mx-auto max-w-2xl ">
           <div className="text-center">
             <Image

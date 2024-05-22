@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export function Footer() {
   return (
-    <div className="relative hidden md:flex z-10 h-20 bg-headerfooter border-t items-center">
+    <div className="fixed left-0 bottom-0 w-full hidden md:flex z-10 h-20 bg-headerfooter border-t items-center">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <Image

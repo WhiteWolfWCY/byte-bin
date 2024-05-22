@@ -27,7 +27,7 @@ export function Header() {
   };
 
   return (
-    <div className="relative z-10 border-b py-4 bg-headerfooter">
+    <div className="fixed left-0 top-0 w-full z-10 border-b py-4 bg-headerfooter">
       <div className="flex container mx-auto justify-between flex-row items-center">
         <Link href="/" className="flex gap-2 items-center text-xl text-black">
           <Image
